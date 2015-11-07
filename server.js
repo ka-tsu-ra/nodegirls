@@ -11,8 +11,6 @@ function handler(request, response) {
   var url = request.url; // request.url is just automatically populated to be whatever url is typed in to the address bar
 
   if (url === '/') {
-
-
     fs.readFile(__dirname + '/index.html', function (error, index){
     //sends the index back to the client!
     //  '__dirname' refers to current directory
@@ -30,7 +28,22 @@ function handler(request, response) {
 
   } else if (url === '/cat') {
     response.writeHead(200, {"Content-Type": "text/html"});
-    response.end('<img src="http://bit.ly/1WEEsZI" />')
+    response.end('<img src="http://bit.ly/1WEEsZI" />');
+  // } else if (url.indexOf('/cat') > -1 {
+  //     var type = url.split('/')[2].toString();
+  // })
+  } else {
+    
+    fs.readFile(__dirname + url, function(error, file) {
+      if (error) {
+        console.log(error);
+        response.end();
+      } else {
+        var ext = url.split('.')[1];
+        response.writeHead(200, {'Content-Type': 'text/' + ext});
+        response.end(file);
+      }
+    });
   }
 }
 // use http module's method createServer, pass in the handler function, and tell it to listen at the port we defined.
